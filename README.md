@@ -1,6 +1,6 @@
-# Calchopper
+# Sales Funnel
 
-Calchopper is a FastAPI-based platform that orchestrates predictable revenue funnels across digital, offline, and hybrid motions. It exposes a REST API capable of onboarding funis, configuring capacity and channel data, simulating scenarios, and generating automated recommendations for revenue attainment.
+Sales Funnel is a FastAPI-based platform that orchestrates predictable revenue funnels across digital, offline, and hybrid motions. It exposes a REST API capable of onboarding funis, configuring capacity and channel data, simulating scenarios, and generating automated recommendations for revenue attainment.
 
 ## Getting started
 
@@ -11,7 +11,7 @@ pip install -r backend/requirements.txt
 uvicorn backend.app.main:app --reload
 ```
 
-After the server is running you can hit `POST /api/v1/auth/seed` once to create a default admin user (`admin@calchopper.io` / `admin`) bound to the default workspace. From there authenticate via `POST /api/v1/auth/login` and use the token for all subsequent requests.
+After the server is running you can hit `POST /api/v1/auth/seed` once to create a default admin user (`admin@salesfunnel.io` / `admin`) bound to the default workspace. From there authenticate via `POST /api/v1/auth/login` and use the token for all subsequent requests.
 
 ## Key API flows
 

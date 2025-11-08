@@ -25,12 +25,12 @@ def login(payload: TokenRequest, db: Session = Depends(get_db)) -> Token:
 @router.post("/seed", response_model=Token)
 def seed_admin(db: Session = Depends(get_db)) -> Token:
     """Convenience endpoint to create a default admin during development."""
-    user = db.query(User).filter(User.email == "admin@calchopper.io").first()
+    user = db.query(User).filter(User.email == "admin@salesfunnel.io").first()
     if not user:
         user = User(
             workspace_id=1,
             name="Admin",
-            email="admin@calchopper.io",
+            email="admin@salesfunnel.io",
             password_hash=get_password_hash("admin"),
             role="admin",
         )

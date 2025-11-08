@@ -11,7 +11,7 @@ from .startup import ensure_bootstrap_data
 Base.metadata.create_all(bind=engine)
 ensure_bootstrap_data()
 
-app = FastAPI(title="Calchopper API", version="1.0.0")
+app = FastAPI(title="Sales Funnel API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
