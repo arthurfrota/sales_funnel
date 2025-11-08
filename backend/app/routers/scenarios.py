@@ -3,6 +3,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from sqlalchemy.inspection import inspect
+
 from ..advisor import Advisor
 from ..calculators.base import CalculationContext
 from ..calculators.digital import DigitalLeadCalculator, DigitalDirectCalculator
@@ -138,7 +140,9 @@ def calculate_scenario(scenario_id: int, db: Session = Depends(get_db)) -> Scena
 
 
 def channel_to_dict(channel: Channel) -> dict:
-    data = {k: getattr(channel, k) for k in channel.__dict__ if not k.startswith("_") and k not in {"funnel_id", "id", "created_at", "updated_at"}}
+    mapper = inspect(channel.__class__)
+    excluded = {"id", "funnel_id", "created_at"}
+    data = {column.key: getattr(channel, column.key) for column in mapper.columns if column.key not in excluded}
     data["name"] = channel.name
     return data
 
@@ -146,7 +150,9 @@ def channel_to_dict(channel: Channel) -> dict:
 def capacity_to_dict(capacity: Capacity | None) -> dict:
     if not capacity:
         return {}
-    return {k: getattr(capacity, k) for k in capacity.__dict__ if not k.startswith("_") and k not in {"funnel_id", "id"}}
+    mapper = inspect(capacity.__class__)
+    excluded = {"id", "funnel_id"}
+    return {column.key: getattr(capacity, column.key) for column in mapper.columns if column.key not in excluded}
 
 
 def apply_channel_overrides(channels: list[dict], overrides: list[dict]) -> list[dict]:

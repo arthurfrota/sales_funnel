@@ -3,6 +3,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from sqlalchemy.inspection import inspect
+
 from ..dependencies import get_current_user, get_db
 from ..models import Capacity, Channel, Funnel, FunnelMetric
 from ..schemas import (
@@ -131,7 +133,7 @@ def delete_channel(channel_id: int, db: Session = Depends(get_db)) -> dict:
 
 def serialize_funnel(funnel: Funnel) -> FunnelRead:
     metrics = {metric.name: metric.value for metric in funnel.metrics}
-    capacity = {k: getattr(funnel.capacity, k) for k in funnel.capacity.__dict__ if not k.startswith("_")} if funnel.capacity else None
+    capacity = serialize_capacity(funnel.capacity)
     channels = list(funnel.channels)
     return FunnelRead(
         id=funnel.id,
@@ -147,3 +149,11 @@ def serialize_funnel(funnel: Funnel) -> FunnelRead:
         capacity=capacity,
         channels=channels,
     )
+
+
+def serialize_capacity(capacity: Capacity | None) -> dict | None:
+    if not capacity:
+        return None
+    mapper = inspect(capacity.__class__)
+    excluded = {"id", "funnel_id"}
+    return {column.key: getattr(capacity, column.key) for column in mapper.columns if column.key not in excluded}
